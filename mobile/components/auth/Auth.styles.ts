@@ -7,7 +7,7 @@ export const AuthInput = styled(TextInput)`
   margin-bottom: 15px;
   padding: 10px;
   color: ${(props: any) => props.theme.text};
-  font-size: 22;
+  font-size: 22px;
   border-top-left-radius: 15px;
 `;
 
@@ -15,11 +15,11 @@ export const AuthButton = styled(View)`
   margin-top: 20px;
   margin-bottom: 20px;
   color: ${(props: any) => props.theme.text};
-  font-size: 22;
   text-align: center;
   padding: 10px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  opacity: ${(props: any) => (props.disabled ? 0.5 : 1)};
 `;
 
 export const AuthSwitch = styled(View)`
@@ -31,7 +31,7 @@ export const AuthSwitch = styled(View)`
 
 export const AuthSwitchText = styled(Text)`
   color: ${(props: any) => props.theme.background};
-  font-size: 18;
+  font-size: 18px;
 `;
 
 export const AuthDiv = styled(View)`
@@ -54,11 +54,21 @@ export const AuthBottom = styled(View)`
 `;
 
 export const AuthH1 = styled(H1)`
-  font-size: 60;
+  font-size: 60px;
 `;
 
 export const P = styled(Text)`
   opacity: 0.7;
   margin-top: 25px;
-  font-size: 22;
+  font-size: 22px;
+`;
+
+export const Error = styled(P)`
+  color: orangered;
+  text-align: center;
+  margin-bottom: 10px;
+`;
+
+export const AuthButtonText = styled(Text)`
+  font-size: 22px;
 `;

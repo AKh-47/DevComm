@@ -27,12 +27,16 @@ const PrimaryButton = styled(View)`
   padding-right: 20px;
   padding-left: 20px;
   border-radius: 5px;
-  font-size: 1.25rem;
-  font-weight: bold;
   width: 250px;
   text-align: center;
   margin-top: 10px;
   margin-bottom: 10px;
+`;
+
+const PrimaryButtonText = styled(Text)`
+  font-size: 21px;
+  font-weight: bold;
+  color: ${(props: any) => props.theme.background};
 `;
 
 const SecondaryButton = styled(View)`
@@ -41,8 +45,6 @@ const SecondaryButton = styled(View)`
   padding-right: 20px;
   padding-left: 20px;
   border-radius: 5px;
-  font-size: 1.25rem;
-  font-weight: bold;
   border: 1px;
   border-radius: 5px;
   border-color: ${(props: any) => props.theme.text};
@@ -53,16 +55,25 @@ const SecondaryButton = styled(View)`
   margin-bottom: 10px;
 `;
 
-export default function Landing(): ReactElement {
+const SecondaryButtonText = styled(Text)`
+  font-size: 21px;
+  font-weight: bold;
+`;
+
+export default function Landing({ navigation }: any): ReactElement {
   return (
     <LandingDiv>
       <LandingH1>Dev Comm</LandingH1>
       <P>A chat community for developers to connect and collaborate</P>
-      <TouchableOpacity onPress={() => {}}>
-        <SecondaryButton>Log in</SecondaryButton>
+      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <SecondaryButton>
+          <SecondaryButtonText>Log in</SecondaryButtonText>
+        </SecondaryButton>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {}}>
-        <PrimaryButton>Join the Community</PrimaryButton>
+      <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+        <PrimaryButton>
+          <PrimaryButtonText>Join the Community</PrimaryButtonText>
+        </PrimaryButton>
       </TouchableOpacity>
     </LandingDiv>
   );

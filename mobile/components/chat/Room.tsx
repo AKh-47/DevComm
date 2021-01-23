@@ -2,12 +2,18 @@ import React, { ReactElement } from "react";
 import { TouchableOpacity, ScrollView } from "react-native";
 
 import styled from "styled-components/native";
-import { View, H1, TextInput } from "../../styles";
+import { View, H1, TextInput, Text } from "../../styles";
 import useInputState from "../../hooks/useInputState";
 import Message from "./Message";
+import { AntDesign } from "@expo/vector-icons";
 
 const RoomDiv = styled(View)`
   flex: 1;
+`;
+
+const RoomTopText = styled(Text)`
+  margin-left: 20px;
+  font-size: 30px;
 `;
 
 const RoomBottom = styled(View)`
@@ -19,8 +25,6 @@ const RoomBottom = styled(View)`
 const RoomTop = styled(View)`
   height: 60px;
   background-color: #333;
-  font-size: 35;
-  color: #fefefe;
   flex-direction: row;
   align-items: center;
   padding-left: 20px;
@@ -35,7 +39,7 @@ const RoomChat = styled(ScrollView)`
 
 const RoomInput = styled(TextInput)`
   height: 100%;
-  font-size: 1.5rem;
+  font-size: 25px;
   padding: 15px;
   flex: 2;
   width: 100%;
@@ -49,37 +53,54 @@ const SendButton = styled(View)`
   font-weight: bold;
   align-items: center;
   justify-content: center;
-  font-size: 24;
+  font-size: 24px;
   padding-right: 10px;
   padding-left: 10px;
 `;
 
-interface Props {}
+interface Props {
+  navigation: any;
+}
 
-export default function Room({}: Props): ReactElement {
+export default function Room({ navigation }: Props): ReactElement {
   const [message, setMessage, resetMessage] = useInputState();
+
+  const viewProfileHandler = () => {
+    navigation.navigate("Profile");
+  };
 
   return (
     <RoomDiv>
-      <RoomTop>React</RoomTop>
+      <RoomTop>
+        <TouchableOpacity onPress={navigation.goBack}>
+          <AntDesign name="back" size={28} color="#fefefe" />
+        </TouchableOpacity>
+        <RoomTopText>React</RoomTopText>
+      </RoomTop>
 
       <RoomChat>
-        <Message>This works da</Message>
-        <Message>This also da</Message>
-        <Message>This also da</Message>
-        <Message>This also da</Message>
-        <Message>This also da</Message>
-        <Message>
+        <Message viewProfileHandler={viewProfileHandler}>This works da</Message>
+        <Message viewProfileHandler={viewProfileHandler}>This also da</Message>
+        <Message viewProfileHandler={viewProfileHandler}>This also da</Message>
+        <Message viewProfileHandler={viewProfileHandler}>This also da</Message>
+        <Message viewProfileHandler={viewProfileHandler}>This also da</Message>
+        <Message viewProfileHandler={viewProfileHandler}>
           Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia
           mollitia, consequuntur sed, ex explicabo assumenda reiciendis autem
           vitae, optio laudantium veniam ipsum unde consequatur dolorem nisi
           error quaerat? Amet, ad?
         </Message>
-        <Message right>Hello bitchs</Message>
-        <Message>This also da</Message>
-        <Message>This also da</Message>
-        <Message right>Hello bitchs</Message>
-        <Message right>Hello bitchs</Message>
+        <Message viewProfileHandler={viewProfileHandler} right>
+          Hello bitchs
+        </Message>
+        <Message viewProfileHandler={viewProfileHandler}>This also da</Message>
+        <Message viewProfileHandler={viewProfileHandler}>This also da</Message>
+        <Message viewProfileHandler={viewProfileHandler} right>
+          Hello bitchs
+        </Message>
+        <Message viewProfileHandler={viewProfileHandler} right>
+          Hello bitchs
+        </Message>
       </RoomChat>
 
       <RoomBottom>

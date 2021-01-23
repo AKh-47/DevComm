@@ -1,6 +1,7 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import useInputState from "../../hooks/useInputState";
+import { Text } from "../../styles";
 
 import {
   AuthInput,
@@ -11,15 +12,22 @@ import {
   AuthH1,
   AuthTop,
   AuthBottom,
+  AuthButtonText,
   P,
 } from "./Auth.styles";
 
-export default function Register(): ReactElement {
+export default function Register({ navigation }: any): ReactElement {
   const [username, setUsername, resetUsername] = useInputState();
   const [password, setPassword, resetpassword] = useInputState();
   const [confirmPass, setConfirmPass, resetConfirmPass] = useInputState();
 
-  const handleSubmit = () => {};
+  const [error, setError] = useState(false);
+
+  const handleSubmit = () => {
+    if (!username || !password || !(password === confirmPass)) {
+      setError(true);
+    }
+  };
 
   return (
     <AuthDiv>
@@ -46,10 +54,20 @@ export default function Register(): ReactElement {
           secureTextEntry={true}
         />
         <AuthSwitch>
-          <AuthSwitchText>Already have an account? Log in</AuthSwitchText>
+          <AuthSwitchText>
+            Already have an account?
+            <TouchableOpacity
+              style={{ marginLeft: 5 }}
+              onPress={() => navigation.navigate("Login")}
+            >
+              <AuthSwitchText>Log in</AuthSwitchText>
+            </TouchableOpacity>
+          </AuthSwitchText>
         </AuthSwitch>
-        <TouchableOpacity onPress={handleSubmit}>
-          <AuthButton>Submit</AuthButton>
+        <TouchableOpacity disabled={error} onPress={handleSubmit}>
+          <AuthButton disabled={error}>
+            <AuthButtonText>Submit</AuthButtonText>
+          </AuthButton>
         </TouchableOpacity>
       </AuthBottom>
     </AuthDiv>

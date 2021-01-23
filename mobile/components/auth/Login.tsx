@@ -1,6 +1,8 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import { TouchableOpacity } from "react-native";
+import { useAuth } from "../../context/AuthContext";
 import useInputState from "../../hooks/useInputState";
+import { View } from "../../styles";
 
 import {
   AuthInput,
@@ -12,13 +14,25 @@ import {
   AuthTop,
   AuthBottom,
   P,
+  Error,
+  AuthButtonText,
 } from "./Auth.styles";
 
-export default function Login(): ReactElement {
+export default function Login({ navigation }: any): ReactElement {
   const [username, setUsername, resetUsername] = useInputState();
   const [password, setPassword, resetpassword] = useInputState();
 
-  const handleSubmit = () => {};
+  const [error, setError] = useState("");
+
+  const auth = useAuth();
+
+  const handleSubmit = async () => {
+    const error = await auth?.login(username, password);
+
+    if (error) {
+      setError("Auth Failed");
+    }
+  };
 
   return (
     <AuthDiv>
@@ -26,6 +40,7 @@ export default function Login(): ReactElement {
         <AuthH1>Log in</AuthH1>
         <P>Login to your account to access the community</P>
       </AuthTop>
+      {error && <Error>Auth Failed</Error>}
       <AuthBottom>
         <AuthInput
           onChangeText={setUsername}
@@ -39,10 +54,20 @@ export default function Login(): ReactElement {
           secureTextEntry={true}
         />
         <AuthSwitch>
-          <AuthSwitchText>Don't have an account? Register</AuthSwitchText>
+          <AuthSwitchText>
+            Don't have an account?
+            <TouchableOpacity
+              style={{ marginLeft: 5 }}
+              onPress={() => navigation.navigate("Register")}
+            >
+              <AuthSwitchText>Register</AuthSwitchText>
+            </TouchableOpacity>
+          </AuthSwitchText>
         </AuthSwitch>
-        <TouchableOpacity onPress={handleSubmit}>
-          <AuthButton>Submit</AuthButton>
+        <TouchableOpacity disabled={false} onPress={handleSubmit}>
+          <AuthButton disabled={false}>
+            <AuthButtonText>Submit</AuthButtonText>
+          </AuthButton>
         </TouchableOpacity>
       </AuthBottom>
     </AuthDiv>

@@ -23,9 +23,9 @@ const roomSchema = new mongoose.Schema({
     required: true,
   },
   domain: {
-    type: String,
+    type: [String],
     unique: true,
-    default: "",
+    default: [],
   },
   messages: {
     type: [messageSchema],

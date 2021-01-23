@@ -9,7 +9,7 @@ interface Value {}
 
 const SettingsContext = React.createContext<Nullable<Value>>(null);
 
-export function useAuth() {
+export function useSettings() {
   return useContext(SettingsContext);
 }
 

@@ -1,68 +1,70 @@
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 import User from "../models/User";
 
-export const registerHandler = async (
-  _: undefined,
-  { username, email, password }: any
-) => {
+export const registerHandler = async (req: Request, res: Response) => {
   try {
-    const exisitngUser = await User.findOne({ email });
+    const { username, password } = req.body;
+
+    const exisitngUser = await User.findOne({ username });
 
     if (exisitngUser) {
-      return {
-        message: "Email is already in use",
-        success: false,
-      };
+      return res.status(500).json({
+        message: "Username is already in use",
+      });
     }
 
-    // const existingUsername = await User.findOne({ username });
-
-    const tag = Math.floor(1000 + Math.random() * 9000);
     const hashedPass = await bcrypt.hash(password, 10);
 
-    let user = new User({
-      tag,
+    await new User({
       username,
-      email,
       password: hashedPass,
+    }).save();
+
+    res.status(200).json({
+      message: "User Created",
     });
-
-    user = await user.save();
-
-    return {
-      message: "User Created Succesfully",
-      success: true,
-    };
   } catch (err) {
     console.log(err);
-    return {
-      message: "Internal Server Error",
-      success: false,
-    };
+    res.sendStatus(500);
   }
 };
 
-export const loginHandler = async (_: undefined, { email, password }: any) => {
-  const user = await User.findOne({ email });
+export const loginHandler = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
 
   if (!user) {
-    return "User does not exist";
+    return res.status(401).json({
+      message: "Auth Failed",
+      error: true,
+    });
   }
 
-  // const check = await bcrypt.compare(password, user.password);
+  const check = await bcrypt.compare(password, user.password);
 
-  //   if (!check) {
-  //     return "Auth Failed";
-  //   }
+  if (!check) {
+    return res.status(401).json({
+      message: "Auth Failed",
+      error: true,
+    });
+  }
 
   if (!process.env.SECRET) {
     throw new Error("Environment Invalid");
   }
 
-  //   const token = jwt.sign(
-  //     { id: user._id, name: user.name, email: user.email },
-  //     process.env.SECRET
-  //   );
+  const token = jwt.sign(
+    { id: user._id, name: user.name, email: user.email },
+    process.env.SECRET
+  );
+
+  res.status(200).json({
+    message: "Logged In",
+    token,
+    error: null,
+    user: { ...user, password: null },
+  });
 };

@@ -1,60 +1,85 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import styled from "styled-components/native";
 
 import { ScrollView } from "react-native";
 import { View, H1, TextInput, Button, Text } from "../../styles";
+import { Feather } from "@expo/vector-icons";
 
 import HomeCard from "./HomeCard";
+import { GET } from "../../utils/request";
+import Loading from "../Loading";
 
 const HomeTop = styled(View)`
   background-color: #fff;
-  height: 50px;
-  margin: 20px;
+  height: 70px;
+  padding: 20px;
   flex-direction: row;
-  border-bottom-width: 2px;
+  border-bottom-width: 1px;
   border-bottom-color: #fefefe;
+  background-color: ${(props: any) => props.theme.background};
 `;
 
 const HomeListDiv = styled(ScrollView)`
   flex: 1;
+  background-color: ${(props: any) => props.theme.background}; ;
 `;
 
 const SearchBar = styled(TextInput)`
-  background-color: #333;
+  background-color: ${(props: any) => props.theme.background};
   height: 100%;
   flex: 1;
   color: #fefefe;
-  font-size: 1.5rem;
-  padding: 5px;
+  font-size: 25px;
+  padding: 10px;
 `;
 
-interface Props {}
+const SearchIcon = styled(View)`
+  background-color: ${(props: any) => props.theme.background};
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+`;
 
-export default function HomeList({}: Props): ReactElement {
+interface Props {
+  navigation: any;
+}
+
+export default function HomeList({ navigation }: Props): ReactElement {
+  const [rooms, setRooms] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getRooms = async () => {
+      const data = await GET("/rooms");
+      setRooms(data);
+      setLoading(false);
+    };
+
+    getRooms();
+  }, []);
+
+  const enterhandler = () => {
+    navigation.navigate("Room");
+  };
+
+  if (loading) return <Loading />;
+
   return (
     <React.Fragment>
       <HomeTop>
-        {/* <FontAwesome.Button
-          name="search"
-          size={32}
-          color="#fefefe"
-          backgroundColor="#333"
-        /> */}
+        <SearchIcon>
+          <Feather name="search" size={24} color="#fefefe" />
+        </SearchIcon>
         <SearchBar placeholder="Search" />
       </HomeTop>
 
       <HomeListDiv>
-        <HomeCard></HomeCard>
-        <HomeCard></HomeCard>
-        <HomeCard></HomeCard>
-        <HomeCard></HomeCard>
-        <HomeCard></HomeCard>
-        <HomeCard></HomeCard>
-        <HomeCard></HomeCard>
-        <HomeCard></HomeCard>
-        <HomeCard></HomeCard>
-        <HomeCard></HomeCard>
-        <HomeCard></HomeCard>
+        {rooms.map((room: any) => (
+          <HomeCard enterhandler={enterhandler} image={room.image}>
+            {room.name}
+          </HomeCard>
+        ))}
       </HomeListDiv>
     </React.Fragment>
   );

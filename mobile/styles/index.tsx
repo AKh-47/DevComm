@@ -15,6 +15,10 @@ export const View = styled.View`
   font-family: "Roboto_400Regular";
 `;
 
+export const Stretch = styled(View)`
+  flex: 1;
+`;
+
 export const Center = styled(View)`
   align-items: center;
   justify-content: center;

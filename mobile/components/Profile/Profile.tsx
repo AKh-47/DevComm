@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { View, H1, TextInput, Button, Text } from "../../styles";
 import {
@@ -9,6 +9,9 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthContext";
+import BottomNav from "../BottomNav";
+import { Nullable, User } from "../../utils/types";
+import { GET } from "../../utils/request";
 
 const ProfileDiv = styled(View)`
   flex: 1;
@@ -90,40 +93,60 @@ const ProfileLogOutText = styled(Text)`
   padding-right: 18px;
 `;
 
-interface Props {}
+interface Props {
+  navigation: any;
+  route: any;
+}
 
-export default function Profile({}: Props): ReactElement {
+export default function Profile({ navigation, route }: Props): ReactElement {
   const auth = useAuth();
 
+  const [user, setUser] = useState<Nullable<User>>(null);
+
+  useEffect(() => {
+    if (route.params.currentUser) setUser(auth?.currentUser);
+    else {
+      GET(`/user/${route.params.userId}`).then(setUser);
+    }
+  }, []);
+
   return (
-    <ProfileDiv
-    // contentContainerStyle={ProfileDiveStyles}
-    >
-      <ProfileImage source={require("../../assets/base/person.png")} />
-      <EditProfile>Edit Profile</EditProfile>
-      <ProfileName>Akhil Kala</ProfileName>
-      <ProfileBio>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit ipsum
-        est, quae dolorum dignissimos delectus mollitia maxime numquam, saepe
-        omnis culpa, in quisquam doloribus tempore corrupti magnam impedit eaque
-        tenetur?
-      </ProfileBio>
-      <ProfileLinks>
-        <ProfileLink onPress={() => Linking.openURL("https://google.com")}>
-          <AntDesign name="linkedin-square" size={31} color="#fefefe" />
-        </ProfileLink>
-        <ProfileLink
-          onPress={() => Linking.openURL("https://github.com/akh-47")}
-        >
-          <AntDesign name="github" size={31} color="#fefefe" />
-        </ProfileLink>
-        <ProfileLink onPress={() => Linking.openURL("https://google.com")}>
-          <AntDesign name="instagram" size={31} color="#fefefe" />
-        </ProfileLink>
-      </ProfileLinks>
-      <ProfileLogOut onPress={() => auth?.logout()}>
-        <ProfileLogOutText>Log Out</ProfileLogOutText>
-      </ProfileLogOut>
-    </ProfileDiv>
+    <React.Fragment>
+      <ProfileDiv
+      // contentContainerStyle={ProfileDiveStyles}
+      >
+        <ProfileImage source={require("../../assets/base/person.png")} />
+        {route.params.currentUser && <EditProfile>Edit Profile</EditProfile>}
+        <ProfileName>{user?.username}</ProfileName>
+        <ProfileBio>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit ipsum
+          est, quae dolorum dignissimos delectus mollitia maxime numquam, saepe
+          omnis culpa, in quisquam doloribus tempore corrupti magnam impedit
+          eaque tenetur?
+        </ProfileBio>
+        <ProfileLinks>
+          <ProfileLink onPress={() => Linking.openURL("https://google.com")}>
+            <AntDesign name="linkedin-square" size={31} color="#fefefe" />
+          </ProfileLink>
+          <ProfileLink
+            onPress={() => Linking.openURL("https://github.com/akh-47")}
+          >
+            <AntDesign name="github" size={31} color="#fefefe" />
+          </ProfileLink>
+          <ProfileLink onPress={() => Linking.openURL("https://google.com")}>
+            <AntDesign name="instagram" size={31} color="#fefefe" />
+          </ProfileLink>
+        </ProfileLinks>
+        {route.params.currentUser && (
+          <ProfileLogOut onPress={() => auth?.logout()}>
+            <ProfileLogOutText>Log Out</ProfileLogOutText>
+          </ProfileLogOut>
+        )}
+      </ProfileDiv>
+
+      {route.params.currentUser && (
+        <BottomNav listSwitchhandler={() => navigation.navigate("List")} />
+      )}
+    </React.Fragment>
   );
 }

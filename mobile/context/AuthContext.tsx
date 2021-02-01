@@ -36,10 +36,18 @@ export default function AuthProvider({ children }: Props): ReactElement {
     })();
   }, []);
 
-  const register = async (username: string, password: string) => {};
+  const register = async (username: string, password: string) => {
+    const { error } = await POST("/auth/register", {
+      username,
+      password,
+    });
 
-  const isCurrentUser = (userID: string) => {
-    return currentUser?._id === userID;
+    if (!error) {
+      login(username, password);
+      return null;
+    } else {
+      return error;
+    }
   };
 
   const login = async (username: string, password: string) => {
@@ -60,6 +68,10 @@ export default function AuthProvider({ children }: Props): ReactElement {
   const logout = async () => {
     setCurrentUser(null);
     await AsyncStorage.removeItem("user");
+  };
+
+  const isCurrentUser = (userID: string) => {
+    return currentUser?._id === userID;
   };
 
   const value = {

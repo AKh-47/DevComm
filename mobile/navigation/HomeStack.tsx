@@ -7,7 +7,7 @@ import Profile from "../components/Profile/Profile";
 
 const Stack = createStackNavigator();
 
-export default function AuthStack(): ReactElement {
+export default function HomeStack(): ReactElement {
   return (
     <Stack.Navigator
       screenOptions={{

@@ -6,6 +6,7 @@ import { View, H1, TextInput, Text } from "../../styles";
 import useInputState from "../../hooks/useInputState";
 import Message from "./Message";
 import { AntDesign } from "@expo/vector-icons";
+import NavHeader from "../NavHeader";
 
 const RoomDiv = styled(View)`
   flex: 1;
@@ -66,11 +67,12 @@ export default function Room({ navigation }: Props): ReactElement {
   const [message, setMessage, resetMessage] = useInputState();
 
   const viewProfileHandler = () => {
-    navigation.navigate("Profile");
+    navigation.navigate("Profile", { currentUser: false });
   };
 
   return (
     <RoomDiv>
+      {/* <NavHeader backHandler={navigation.goBack}>React</NavHeader> */}
       <RoomTop>
         <TouchableOpacity onPress={navigation.goBack}>
           <AntDesign name="back" size={28} color="#fefefe" />

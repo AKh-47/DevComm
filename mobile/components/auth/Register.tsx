@@ -21,13 +21,9 @@ export default function Register({ navigation }: any): ReactElement {
   const [password, setPassword, resetpassword] = useInputState();
   const [confirmPass, setConfirmPass, resetConfirmPass] = useInputState();
 
-  const [error, setError] = useState(false);
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const handleSubmit = () => {
-    if (!username || !password || !(password === confirmPass)) {
-      setError(true);
-    }
-  };
+  const handleSubmit = () => {};
 
   return (
     <AuthDiv>
@@ -64,8 +60,8 @@ export default function Register({ navigation }: any): ReactElement {
             </TouchableOpacity>
           </AuthSwitchText>
         </AuthSwitch>
-        <TouchableOpacity disabled={error} onPress={handleSubmit}>
-          <AuthButton disabled={error}>
+        <TouchableOpacity disabled={false} onPress={handleSubmit}>
+          <AuthButton disabled={false}>
             <AuthButtonText>Submit</AuthButtonText>
           </AuthButton>
         </TouchableOpacity>

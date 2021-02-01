@@ -8,6 +8,7 @@ import { Feather } from "@expo/vector-icons";
 import HomeCard from "./HomeCard";
 import { GET } from "../../utils/request";
 import Loading from "../Loading";
+import BottomNav from "../BottomNav";
 
 const HomeTop = styled(View)`
   background-color: #fff;
@@ -63,6 +64,10 @@ export default function HomeList({ navigation }: Props): ReactElement {
     navigation.navigate("Room");
   };
 
+  const profileSwitchhandler = () => {
+    navigation.navigate("Profile", { currentUser: true });
+  };
+
   if (loading) return <Loading />;
 
   return (
@@ -81,6 +86,7 @@ export default function HomeList({ navigation }: Props): ReactElement {
           </HomeCard>
         ))}
       </HomeListDiv>
+      <BottomNav profileSwitchhandler={profileSwitchhandler} />
     </React.Fragment>
   );
 }

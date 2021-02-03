@@ -1,7 +1,7 @@
 import Room from "../models/Room";
-import { Room as RoomType } from "./types";
+import { Room as IRoom } from "./types";
 
-const rooms: RoomType[] = [
+const rooms: IRoom[] = [
   {
     name: "React",
     image: "react.png",
@@ -10,10 +10,17 @@ const rooms: RoomType[] = [
     name: "Node.js",
     image: "node.js.png",
   },
+  {
+    name: "CSS",
+    image: "css3.png",
+  },
+  {
+    name: "Next.js",
+    image: "next.js.png",
+  },
 ];
-
 export default async () => {
-  rooms.forEach(async (room: RoomType) => {
-    await new Room(room);
+  rooms.forEach(async (room: IRoom) => {
+    await new Room(room).save();
   });
 };

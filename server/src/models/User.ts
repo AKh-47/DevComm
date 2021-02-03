@@ -8,6 +8,18 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  bio: {
+    type: String,
+  },
+  linkedin: {
+    type: String,
+  },
+  github: {
+    type: String,
+  },
+  instagram: {
+    type: String,
+  },
 });
 
 export default mongoose.model("User", userSchema);

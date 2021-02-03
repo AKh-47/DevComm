@@ -25,10 +25,14 @@ export const registerHandler = async (req: Request, res: Response) => {
 
     res.status(200).json({
       message: "User Created",
+      error: null,
     });
   } catch (err) {
     console.log(err);
-    res.sendStatus(500);
+    res.status(500).json({
+      message: err.message,
+      error: true,
+    });
   }
 };
 

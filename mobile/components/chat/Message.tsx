@@ -40,9 +40,13 @@ export default function Message({
 }: Props): ReactElement {
   return (
     <MessageDiv right={right}>
-      <TouchableOpacity onPress={viewProfileHandler}>
-        <MessageName>{right ? "You" : "Akhil Kala"}</MessageName>
-      </TouchableOpacity>
+      {right ? (
+        <MessageName>You</MessageName>
+      ) : (
+        <TouchableOpacity onPress={viewProfileHandler}>
+          <MessageName>Akhil Kala</MessageName>
+        </TouchableOpacity>
+      )}
       <MessageText>{children}</MessageText>
     </MessageDiv>
   );

@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { TouchableOpacity, ScrollView } from "react-native";
 
 import styled from "styled-components/native";
@@ -7,6 +7,9 @@ import useInputState from "../../hooks/useInputState";
 import Message from "./Message";
 import { AntDesign } from "@expo/vector-icons";
 import NavHeader from "../NavHeader";
+import Loading from "../Loading";
+import { Nullable, Room as IRoom } from "../../utils/types";
+import { GET } from "../../utils/request";
 
 const RoomDiv = styled(View)`
   flex: 1;
@@ -61,15 +64,33 @@ const SendButton = styled(View)`
 
 interface Props {
   navigation: any;
+  route: any;
 }
 
-export default function Room({ navigation }: Props): ReactElement {
+export default function Room({ navigation, route }: Props): ReactElement {
   const [message, setMessage, resetMessage] = useInputState();
+
+  const [loading, setLoading] = useState(true);
+  const [room, setRoom] = useState<Nullable<IRoom>>(null);
 
   const viewProfileHandler = () => {
     navigation.navigate("Profile", { currentUser: false });
   };
 
+  useEffect(() => {
+    const roomID = route.params.roomID;
+
+    GET(`/rooms${roomID}`)
+      .then((room) => {
+        setRoom(room);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <Loading />;
   return (
     <RoomDiv>
       {/* <NavHeader backHandler={navigation.goBack}>React</NavHeader> */}

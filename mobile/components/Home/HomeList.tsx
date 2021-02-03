@@ -9,6 +9,7 @@ import HomeCard from "./HomeCard";
 import { GET } from "../../utils/request";
 import Loading from "../Loading";
 import BottomNav from "../BottomNav";
+import { useRooms } from "../../context/RoomsContext";
 
 const HomeTop = styled(View)`
   background-color: #fff;
@@ -50,6 +51,8 @@ export default function HomeList({ navigation }: Props): ReactElement {
 
   const [loading, setLoading] = useState(true);
 
+  const room = useRooms();
+
   useEffect(() => {
     const getRooms = async () => {
       const data = await GET("/rooms");
@@ -60,8 +63,9 @@ export default function HomeList({ navigation }: Props): ReactElement {
     getRooms();
   }, []);
 
-  const enterhandler = () => {
-    navigation.navigate("Room");
+  const enterhandler = (roomID: string) => {
+    room?.joinRoom(roomID);
+    navigation.navigate("Room", { roomID });
   };
 
   const profileSwitchhandler = () => {
@@ -69,7 +73,6 @@ export default function HomeList({ navigation }: Props): ReactElement {
   };
 
   if (loading) return <Loading />;
-
   return (
     <React.Fragment>
       <HomeTop>
@@ -81,7 +84,10 @@ export default function HomeList({ navigation }: Props): ReactElement {
 
       <HomeListDiv>
         {rooms.map((room: any) => (
-          <HomeCard enterhandler={enterhandler} image={room.image}>
+          <HomeCard
+            enterhandler={() => enterhandler("react")}
+            image={room.image}
+          >
             {room.name}
           </HomeCard>
         ))}

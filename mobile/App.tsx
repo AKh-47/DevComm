@@ -11,6 +11,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import Loading from "./components/Loading";
 import Router from "./navigation/Router";
 import AuthProvider from "./context/AuthContext";
+import RoomsProvider from "./context/RoomsContext";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -26,9 +27,11 @@ export default function App() {
     <React.Fragment>
       <NavigationContainer>
         <AuthProvider>
-          <Theme>
-            <Router />
-          </Theme>
+          <RoomsProvider>
+            <Theme>
+              <Router />
+            </Theme>
+          </RoomsProvider>
         </AuthProvider>
       </NavigationContainer>
     </React.Fragment>

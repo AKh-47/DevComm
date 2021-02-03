@@ -1,5 +1,7 @@
 export type Nullable<T> = T | null | undefined;
 
+export type Room = string;
+
 export interface User {
   _id: string;
   username: string;

@@ -1,11 +1,22 @@
-import React, { ReactElement, useContext } from "react";
-import { User, Nullable } from "../utils/types";
+import React, { ReactElement, useContext, useState, useEffect } from "react";
+import { Room, Nullable } from "../utils/types";
+import socket from "../utils/socket";
+import { useAuth } from "./AuthContext";
 
 interface Props {
   children: ReactElement;
 }
 
-interface Value {}
+interface Value {
+  joinRoom: (roomID: string) => void;
+  leaveRoom: (roomID: string) => void;
+  sendMessage: (roomID: string, message: string) => void;
+}
+
+interface IUserLink {
+  message: string;
+  _id: string;
+}
 
 const RoomsContext = React.createContext<Nullable<Value>>(null);
 
@@ -14,7 +25,29 @@ export function useRooms() {
 }
 
 export default function RoomsProvider({ children }: Props): ReactElement {
-  const value = {};
+  const auth = useAuth();
+
+  useEffect(() => {
+    socket.on("recive-message", (user: IUserLink, message: string) => {});
+  }, []);
+
+  const joinRoom = (roomID: string) => {
+    socket.emit("join-room", "react");
+  };
+
+  const leaveRoom = (roomID: string) => {
+    socket.emit("leave-room", "react");
+  };
+
+  const sendMessage = (roomID: string, message: string) => {
+    socket.emit("leave-room", roomID, auth?.currentUser, message);
+  };
+
+  const value = {
+    joinRoom,
+    leaveRoom,
+    sendMessage,
+  };
 
   return (
     <RoomsContext.Provider value={value}>{children}</RoomsContext.Provider>

@@ -1,7 +1,10 @@
 //@ts-nocheck
-window.navigator.userAgent = "react-native";
+import React from "react-native";
+// window.navigator.userAgent = "react-native";
 
-const io = require("socket.io-client/socket.io");
+console.log(window.navigator.userAgent);
+
+import io from "socket.io-client";
 
 const socket = io("http://localhost:8000/", {
   transports: ["websocket"],

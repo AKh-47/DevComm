@@ -1,7 +1,6 @@
 import express from "express";
 const router = express.Router();
 import { getAllRooms, getRoomByID } from "../controllers/rooms";
-import checkAuth from "../middleware/checkAuth";
 
 router.get("/", getAllRooms);
 router.get("/:id", getRoomByID);

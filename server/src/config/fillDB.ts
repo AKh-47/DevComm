@@ -1,6 +1,8 @@
 import Room from "../models/Room";
 import { Room as IRoom } from "./types";
 
+import mongoose from "mongoose";
+
 const rooms: IRoom[] = [
   {
     name: "React",
@@ -23,4 +25,6 @@ export default async () => {
   rooms.forEach(async (room: IRoom) => {
     await new Room(room).save();
   });
+
+  //
 };

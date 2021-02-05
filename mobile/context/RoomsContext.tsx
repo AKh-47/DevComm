@@ -32,15 +32,15 @@ export default function RoomsProvider({ children }: Props): ReactElement {
   }, []);
 
   const joinRoom = (roomID: string) => {
-    socket.emit("join-room", "react");
+    socket.emit("join-room", roomID);
   };
 
   const leaveRoom = (roomID: string) => {
-    socket.emit("leave-room", "react");
+    socket.emit("leave-room", roomID);
   };
 
   const sendMessage = (roomID: string, message: string) => {
-    socket.emit("leave-room", roomID, auth?.currentUser, message);
+    socket.emit("send-message", roomID, auth?.currentUser, message);
   };
 
   const value = {

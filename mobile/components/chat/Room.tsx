@@ -6,10 +6,13 @@ import { View, H1, TextInput, Text } from "../../styles";
 import useInputState from "../../hooks/useInputState";
 import Message from "./Message";
 import { AntDesign } from "@expo/vector-icons";
-import NavHeader from "../NavHeader";
 import Loading from "../Loading";
-import { Nullable, Room as IRoom } from "../../utils/types";
+import { Nullable, Room as IRoom, UserData } from "../../utils/types";
 import { GET } from "../../utils/request";
+import { useRooms } from "../../context/RoomsContext";
+import { useAuth } from "../../context/AuthContext";
+
+import socket from "../../utils/socket";
 
 const RoomDiv = styled(View)`
   flex: 1;
@@ -73,6 +76,18 @@ export default function Room({ navigation, route }: Props): ReactElement {
   const [loading, setLoading] = useState(true);
   const [room, setRoom] = useState<Nullable<IRoom>>(null);
 
+  const roomsContext = useRooms();
+  const auth = useAuth();
+
+  useEffect(() => {
+    socket.on("recive-message", (room: IRoom) => {
+      setRoom(room);
+      console.log("lol");
+    });
+
+    return socket.removeAllListeners;
+  }, []);
+
   const viewProfileHandler = () => {
     navigation.navigate("Profile", { currentUser: false });
   };
@@ -80,50 +95,48 @@ export default function Room({ navigation, route }: Props): ReactElement {
   useEffect(() => {
     const roomID = route.params.roomID;
 
-    GET(`/rooms${roomID}`)
+    GET(`/rooms/${roomID}`)
       .then((room) => {
         setRoom(room);
         setLoading(false);
       })
       .catch((err) => {
-        setLoading(false);
+        // setLoading(false);
       });
   }, []);
+
+  const goBackHandler = () => {
+    if (!room) return;
+    navigation.goBack();
+    roomsContext?.leaveRoom(room?._id);
+  };
+
+  const sendMessageHandler = () => {
+    if (!message || !room) return;
+    roomsContext?.sendMessage(room?._id, message);
+    resetMessage();
+  };
 
   if (loading) return <Loading />;
   return (
     <RoomDiv>
       {/* <NavHeader backHandler={navigation.goBack}>React</NavHeader> */}
       <RoomTop>
-        <TouchableOpacity onPress={navigation.goBack}>
+        <TouchableOpacity onPress={goBackHandler}>
           <AntDesign name="back" size={28} color="#fefefe" />
         </TouchableOpacity>
-        <RoomTopText>React</RoomTopText>
+        <RoomTopText>{room?.name}</RoomTopText>
       </RoomTop>
 
       <RoomChat>
-        <Message viewProfileHandler={viewProfileHandler}>This works da</Message>
-        <Message viewProfileHandler={viewProfileHandler}>This also da</Message>
-        <Message viewProfileHandler={viewProfileHandler}>This also da</Message>
-        <Message viewProfileHandler={viewProfileHandler}>This also da</Message>
-        <Message viewProfileHandler={viewProfileHandler}>This also da</Message>
-        <Message viewProfileHandler={viewProfileHandler}>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia
-          mollitia, consequuntur sed, ex explicabo assumenda reiciendis autem
-          vitae, optio laudantium veniam ipsum unde consequatur dolorem nisi
-          error quaerat? Amet, ad?
-        </Message>
-        <Message viewProfileHandler={viewProfileHandler} right>
-          Hello bitchs
-        </Message>
-        <Message viewProfileHandler={viewProfileHandler}>This also da</Message>
-        <Message viewProfileHandler={viewProfileHandler}>This also da</Message>
-        <Message viewProfileHandler={viewProfileHandler} right>
-          Hello bitchs
-        </Message>
-        <Message viewProfileHandler={viewProfileHandler} right>
-          Hello bitchs
-        </Message>
+        {room?.messages.map((message) => (
+          <Message
+            // right={message.user._id === auth?.currentUser?._id}
+            viewProfileHandler={viewProfileHandler}
+          >
+            {message.message}
+          </Message>
+        ))}
       </RoomChat>
 
       <RoomBottom>
@@ -132,7 +145,7 @@ export default function Room({ navigation, route }: Props): ReactElement {
           onChangeText={setMessage}
           placeholder="Type a message"
         />
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={sendMessageHandler}>
           <SendButton>Send</SendButton>
         </TouchableOpacity>
       </RoomBottom>

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx kill-port 8000 && nodemon",
+    "killstart": "npx kill-port 8000 && nodemon",
+    "start": "nodemon",
     "build": "rimraf ./build && tsc",
     "prod": "npm run build && node build/index.js"
   },

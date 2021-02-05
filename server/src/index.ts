@@ -17,10 +17,11 @@ const app = express();
 dotenv.config();
 app.use(cors());
 connectDB();
-fillDB();
+// fillDB();
 
 app.use(express.static("src/public"));
 app.use(express.json());
+
 app.use("/rooms", roomRoutes);
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);

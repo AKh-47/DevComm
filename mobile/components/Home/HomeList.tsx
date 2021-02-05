@@ -85,7 +85,7 @@ export default function HomeList({ navigation }: Props): ReactElement {
       <HomeListDiv>
         {rooms.map((room: any) => (
           <HomeCard
-            enterhandler={() => enterhandler("react")}
+            enterhandler={() => enterhandler(room._id)}
             image={room.image}
           >
             {room.name}

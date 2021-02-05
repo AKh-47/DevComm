@@ -14,15 +14,12 @@ const messageSchema = new mongoose.Schema({
 const roomSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
   },
   image: {
     type: String,
-    required: true,
   },
   messages: {
     type: [messageSchema],
-    default: [],
   },
 });
 
